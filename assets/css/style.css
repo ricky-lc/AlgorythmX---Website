@@ -210,8 +210,8 @@ nav {
     width: clamp(150px, 40vw, 340px);
     height: clamp(150px, 40vw, 340px);
     object-fit: contain;
-    border-radius: 1vw;
-    box-shadow: 0 8px 32px rgba(30,30,30,0.11);
+    /* Remove border-radius which can cause edge artifacts */
+    filter: drop-shadow(0 8px 16px rgba(30,30,30,0.15));
     animation: logo-pop 1s cubic-bezier(.77,0,.18,1);
 }
 @keyframes logo-pop {
