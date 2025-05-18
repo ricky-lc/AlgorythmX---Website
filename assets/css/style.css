@@ -1,0 +1,902 @@
+:root {
+    --primary: #232228;
+    --secondary: #88827e;
+    --bg: #f8fafc;
+    --text: #19181b;
+    --accent: #ff6b6b;
+    --white: #fff;
+    --header-blur: 16px;
+    font-size: clamp(14px, 2vw, 22px);
+}
+@media (max-width: 1200px) {
+    :root { font-size: clamp(13px, 2vw, 20px); }
+}
+@media (max-width: 900px) {
+    :root { font-size: clamp(12px, 3vw, 18px); }
+}
+@media (max-width: 700px) {
+    :root { font-size: clamp(11px, 4vw, 16px); }
+}
+@media (max-width: 400px) {
+    :root { font-size: clamp(10px, 5vw, 14px); }
+}
+
+* { box-sizing: border-box; }
+body {
+    margin: 0;
+    font-family: 'Inter', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    scroll-behavior: smooth;
+    min-height: 100vh;
+    font-size: clamp(0.9rem, 2vw, 1.15rem);
+}
+
+/* HEADER & NAV */
+.header {
+    position: fixed;
+    top: 2vw;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    background: rgba(255, 255, 255, 0.48);
+    box-shadow: 0 4px 32px rgba(30,30,30,0.10);
+    border-radius: 2.8em;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 2vw;
+    height: clamp(50px, 7vw, 70px);
+    min-height: 50px;
+    max-width: 98vw;
+    max-height: 96px;
+    backdrop-filter: blur(var(--header-blur));
+    border: none;
+    transition: background 0.3s, width 0.3s, height 0.3s;
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.3em, 1vw, 0.7em);
+    flex-shrink: 0;
+}
+.logo-img {
+    width: clamp(24px, 2.2vw, 3.3em);
+    height: clamp(24px, 2.2vw, 3.3em);
+    min-width: 24px;
+    min-height: 24px;
+    object-fit: contain;
+    border-radius: 0.2em;
+    transition: all 0.3s cubic-bezier(.77,0,.18,1);
+}
+
+nav {
+    position: relative;
+    flex: 1;
+    margin-left: 2vw;
+}
+.nav-list {
+    list-style: none;
+    margin: 0;
+    display: flex;
+    gap: clamp(0.5em, 2vw, 2vw);
+    align-items: center;
+    padding: 0;
+    position: relative;
+    flex-wrap: wrap;
+    width: auto;
+    min-width: 0;
+    max-width: 100%;
+    justify-content: flex-start;
+}
+.nav-link {
+    position: relative;
+    text-decoration: none;
+    color: var(--text);
+    font-weight: 600;
+    font-size: clamp(1em, 1.5vw, 1.26em);
+    background: none;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    padding: clamp(0.25em, 1vw, 0.5em) clamp(0.9em, 3vw, 1.5em);
+    border-radius: 999px;
+    z-index: 1000;
+    transition: color 0.22s;
+    cursor: pointer;
+    display: inline-block;
+    overflow: visible;
+}
+.nav-link:focus { outline: none; }
+
+/* --- Gradient Underline Effect --- */
+.nav-link::after {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 22%;
+    right: 22%;
+    bottom: 0.20em;
+    height: clamp(2px, 0.4vw, 3px);
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.32s cubic-bezier(.77,0,.18,1);
+    z-index: 10;
+    pointer-events: none;
+}
+.nav-link.active::after {
+    transform: scaleX(1);
+}
+.gradient-underline.active::after {
+    left: 18%;
+    right: 18%;
+    height: clamp(3px, 0.7vw, 4px);
+    border-radius: 3px;
+    background: linear-gradient(90deg, #4c2802, #ff6b6b, #70e1f5);
+    box-shadow: 0 0 8px 0 #ff6b6b55, 0 0 18px 0 #70e1f555;
+    animation: pulse-underline-gradient 1.3s infinite alternate cubic-bezier(.77,0,.18,1);
+    opacity: 1 !important;
+    transform: scaleX(1);
+}
+@keyframes pulse-underline-gradient {
+    0% {
+        box-shadow: 0 0 8px 0 #ff6b6b44, 0 0 18px 0 #70e1f544;
+        opacity: 1;
+    }
+    50% {
+        box-shadow: 0 0 14px 2px #ff6b6baa, 0 0 28px 0 #70e1f588;
+        opacity: 0.93;
+    }
+    100% {
+        box-shadow: 0 0 20px 4px #ff6b6bcc, 0 0 32px 0 #70e1f5aa;
+        opacity: 1;
+    }
+}
+.nav-link:not(.active):hover::after {
+    transform: scaleX(1);
+    opacity: 0.5;
+}
+
+/* Responsive tweaks for underline */
+@media (max-width: 700px) {
+    .nav-link::after {
+        left: 10%;
+        right: 10%;
+        height: clamp(1px, 0.3vw, 2px);
+        bottom: -0.4em; /* Lower the underline on mobile */
+    }
+    .gradient-underline.active::after {
+        left: 10%;
+        right: 10%;
+        height: clamp(2px, 0.6vw, 3px);
+        bottom: -0.5em; /* Lower the underline even more on mobile for the "Contact" */
+    }
+}
+@media (max-width: 400px) {
+    .nav-link::after {
+        bottom: -0.55em; /* Even lower underline for very small screens */
+    }
+    .gradient-underline.active::after {
+        bottom: -0.7em;
+    }
+}
+
+/* LOGO INTRO */
+.logo-intro {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.7s, visibility 0.7s;
+}
+.logo-intro.hide {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+.intro-logo-img {
+    width: clamp(150px, 40vw, 340px);
+    height: clamp(150px, 40vw, 340px);
+    object-fit: contain;
+    border-radius: 1vw;
+    box-shadow: 0 8px 32px rgba(30,30,30,0.11);
+    animation: logo-pop 1s cubic-bezier(.77,0,.18,1);
+}
+@keyframes logo-pop {
+    0% { transform: scale(0.5) rotate(-8deg); opacity: 0; }
+    60% { transform: scale(1.15) rotate(6deg); opacity: 1; }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+/* HERO SECTION */
+.hero {
+    min-height: 100vh; /* Full viewport height for desktop */
+    background: linear-gradient(120deg, rgba(117, 62, 7, 0.6) 0%, #4c2802 100%);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding-top: clamp(60px, 10vw, 90px);
+}
+.hero-bg {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    top: 0; left: 0;
+    background: url('https://www.transparenttextures.com/patterns/memphis-mini.png'), radial-gradient(circle at 70% 30%, var(--white) 0%, transparent 70%);
+    opacity: 0.12;
+    z-index: 0;
+}
+.hero .content {
+    position: relative;
+    z-index: 1;
+    max-width: clamp(22em, 90vw, 44em);
+    text-align: center;
+    margin: 0 auto;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.7s;
+    padding: clamp(1em, 3vw, 2em);
+}
+.hero .content.visible {
+    opacity: 1;
+    pointer-events: auto;
+    animation: fadeInUp 1s cubic-bezier(.77,0,.18,1);
+}
+.hero h1 {
+    font-size: clamp(1.8em, 6vw, 3.2em);
+    font-weight: 900;
+    margin-bottom: clamp(0.7em, 2.5vw, 1.2em);
+    letter-spacing: -0.03em;
+}
+.hero p {
+    font-size: clamp(1.1em, 2.5vw, 1.4em);
+    margin-bottom: clamp(1.2em, 3vw, 1.8em);
+    line-height: 1.5;
+    opacity: .95;
+}
+@media (max-width: 700px) {
+    .hero {
+        min-height: 100vh; /* Full viewport height on mobile */
+        padding-top: clamp(50px, 10vw, 70px); /* More padding on top for mobile */
+        padding-bottom: clamp(50px, 15vw, 80px); /* Added bottom padding for mobile */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .hero .content {
+        padding: clamp(1.5em, 5vw, 3em); /* Increased padding for content on mobile */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 70vh; /* Ensure content takes up most of the view */
+    }
+    .container-btn {
+        margin-top: clamp(1em, 4vw, 1.5em); /* More space before button on mobile */
+    }
+    .hero h1 {
+        margin-bottom: clamp(1em, 5vw, 1.5em); /* More space after heading on mobile */
+    }
+}
+
+/* BUTTONS */
+.container-btn {
+    display: flex;
+    justify-content: center;
+    margin-top: clamp(1em, 2.5vw, 1.5em);
+}
+.button-cta {
+    position: relative;
+    background: #fff;
+    box-shadow: 0px 6px 16px 0px #8d7bb187;
+    overflow: hidden;
+    color: #2626f5;
+    font-weight: 700;
+    border: none;
+    border-radius: 12px;
+    padding: clamp(0.6em, 1.8vw, 1em) clamp(1.5em, 5vw, 2.2em);
+    font-size: clamp(1em, 2vw, 1.2em);
+    cursor: pointer;
+    transition: color 0.3s, box-shadow 0.2s;
+    z-index: 1;
+    text-decoration: none;
+    display: inline-block;
+}
+@media (max-width: 700px) {
+    .button-cta {
+        padding: clamp(0.8em, 3vw, 1.2em) clamp(2em, 8vw, 3em); /* Larger button on mobile */
+        font-size: clamp(1.1em, 3vw, 1.3em); /* Larger text on mobile */
+    }
+}
+.button-cta:after {
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 100%;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    border-radius: 12px;
+    background-color: #8BC34A;
+    transition: all 0.3s ease;
+    background-image: linear-gradient(to right, #70e1f5, #ffd194);
+}
+.button-cta:hover {
+    color: var(--primary);
+}
+.button-cta:hover:after {
+    height: 5px;
+}
+.button-cta:active {
+    box-shadow: 0px 4px 8px 0px #8d7bb187;
+}
+
+/* SECTIONS & TITLES */
+.section {
+    padding: clamp(2.5em, 6vh, 7vh) clamp(1em, 4vw, 5vw); /* Reduced padding */
+    text-align: center;
+    position: relative;
+}
+.section-title {
+    font-size: clamp(1.1em, 5vw, 2em); /* Reduced font size */
+    font-weight: 900;
+    margin-bottom: clamp(0.8em, 3vw, 1.8em); /* Reduced margin */
+    letter-spacing: -0.03em;
+    color: var(--primary);
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+/* GRADIENT SUBTITLE for Contact Us */
+.gradient-title {
+    background: linear-gradient(90deg, #4c2802, #ff6b6b, #70e1f5);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    text-fill-color: transparent;
+    animation: gradient-title-shadow-pulse 2.5s infinite alternate cubic-bezier(.77,0,.18,1);
+}
+@keyframes gradient-title-shadow-pulse {
+    0% {
+        text-shadow:
+                0 0 0px rgba(125,19,138,0.10),
+                0 0 0px rgba(125,19,138,0.10),
+                0 0 2px rgba(125,19,138,0.10),
+                0 0 1px rgba(125,19,138,0.10);
+        filter: brightness(0.96);
+    }
+    50% {
+        text-shadow:
+                0 2px 7px rgba(125,19,138,0.18),
+                0 0 13px rgba(125,19,138,0.10),
+                0 0 10px rgba(125,19,138,0.16),
+                0 0 4px rgba(125,19,138,0.13);
+        filter: brightness(1.03);
+    }
+    100% {
+        text-shadow:
+                0 0 0px rgba(125,19,138,0.10),
+                0 0 0px rgba(125,19,138,0.10),
+                0 0 2px rgba(125,19,138,0.10),
+                0 0 1px rgba(125,19,138,0.10);
+        filter: brightness(0.96);
+    }
+}
+
+/* CARDS FOR SERVICES, WORK, TEAM */
+.services-list, .team-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: clamp(0.8em, 2vw, 2vw); /* Reduced gap */
+}
+
+/* SHOWCASE SCROLLING FOR WORK SECTION - FIXED DIRECTION AND SPACING */
+.work-list-container {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(2em, 4vh, 4em) 0;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto; /* Center the container */
+}
+
+/* Fade overlay zones */
+.work-list-container::before,
+.work-list-container::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 20%;
+    z-index: 5;
+    pointer-events: none;
+}
+
+.work-list-container::before {
+    left: 0;
+    background: linear-gradient(to right,
+    var(--white) 0%,
+    rgba(255, 255, 255, 0.8) 50%,
+    rgba(255, 255, 255, 0) 100%);
+}
+
+.work-list-container::after {
+    right: 0;
+    background: linear-gradient(to left,
+    var(--white) 0%,
+    rgba(255, 255, 255, 0.8) 50%,
+    rgba(255, 255, 255, 0) 100%);
+}
+
+/* Center the track for the animation */
+.work-track {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+/* Work list */
+.work-list {
+    display: flex;
+    position: relative;
+    padding: clamp(1em, 2vh, 2em) 0;
+}
+
+/* Inner container that gets animated - Fixed for left to right movement */
+.work-list-inner {
+    display: flex;
+    gap: clamp(1.5em, 3vw, 3vw); /* Equal spacing between ALL cards */
+    animation: slideLeftToRight 32s linear infinite;
+    width: max-content;
+}
+
+/* Pause animation on container hover */
+.work-list-container:hover .work-list-inner {
+    animation-play-state: paused;
+}
+
+/* Animation from RIGHT to LEFT (reversed direction) */
+@keyframes slideLeftToRight {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(5%);
+    }
+}
+
+/* Individual work cards */
+.work-card {
+    background: var(--white);
+    border-radius: clamp(0.8em, 1.5vw, 1.5vw);
+    box-shadow: 0 0.5vh 2vw rgba(30,30,30,0.06);
+    padding: clamp(1.5em, 2.5vh, 2.5vh) clamp(0.8em, 1.5vw, 1.5vw);
+    flex: 0 0 auto;
+    width: clamp(220px, 20vw, 300px);
+    transition: transform 0.3s, box-shadow 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: clamp(0.9em, 1.8vw, 1em);
+    position: relative;
+}
+
+/* RESPONSIVE ADJUSTMENTS FOR SHOWCASE */
+@media (max-width: 900px) {
+    .work-card {
+        width: clamp(180px, 30vw, 250px);
+    }
+    @keyframes slideLeftToRight {
+        0% {
+            transform: translateX(-100%);
+        }
+        100% {
+            transform: translateX(5%);
+        }
+    }
+}
+
+@media (max-width: 700px) {
+    .work-list-container {
+        padding: clamp(1em, 2vh, 2em) 0;
+    }
+    .work-card {
+        width: clamp(150px, 60vw, 200px);
+        padding: clamp(1em, 2vh, 2em) clamp(0.7em, 1.2vw, 1.2vw);
+    }
+    .work-card img {
+        height: clamp(90px, 20vw, 130px);
+    }
+    @keyframes slideLeftToRight {
+        0% {
+            transform: translateX(-100%);
+        }
+        100% {
+            transform: translateX(5%);
+        }
+    }
+}
+
+@media (max-width: 400px) {
+    .work-card {
+        width: clamp(140px, 70vw, 180px);
+    }
+    @keyframes slideLeftToRight {
+        0% {
+            transform: translateX(-100%);
+        }
+        100% {
+            transform: translateX(5%);
+        }
+    }
+}
+
+/* Hover effects for cards */
+.work-card:hover {
+    transform: translateY(-0.5vh) scale(1.05);
+    box-shadow: 0 1.5vh 4vw rgba(30,30,30,0.14);
+    z-index: 10;
+}
+
+.work-card img {
+    width: 100%;
+    max-width: 100%;
+    height: clamp(120px, 12vw, 180px);
+    object-fit: cover;
+    border-radius: clamp(0.4em, 0.8vw, 0.8vw);
+    transition: transform 0.3s;
+}
+
+.work-card:hover img {
+    transform: scale(1.03);
+}
+
+/* Service and team cards remain the same */
+.service-card, .team-card {
+    background: var(--white);
+    border-radius: clamp(0.8em, 1.5vw, 1.5vw);
+    box-shadow: 0 0.5vh 2vw rgba(30,30,30,0.06);
+    padding: clamp(1.5em, 2.5vh, 2.5vh) clamp(0.8em, 1.5vw, 1.5vw);
+    flex: 1 1 clamp(150px, 16vw, 350px);
+    min-width: clamp(130px, 22vw, 230px);
+    max-width: clamp(180px, 38vw, 380px);
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin: clamp(0.8em, 1.5vw, 1.5vw) clamp(0.2em, 0.4vw, 0.4vw);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: clamp(0.9em, 1.8vw, 1em);
+}
+
+.service-card:hover, .team-card:hover {
+    transform: translateY(-0.4vh) scale(1.03);
+    box-shadow: 0 1.5vh 4vw rgba(30,30,30,0.10);
+}
+
+.team-card img {
+    width: clamp(50px, 10vw, 100px);
+    border-radius: clamp(0.4em, 1.5vw, 1.5vw);
+    margin-bottom: clamp(0.8em, 1.5vh, 1.5vh);
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid var(--primary);
+    width: clamp(55px, 10vw, 100px);
+    height: clamp(55px, 10vw, 100px);
+}
+
+.team-card h4 {
+    margin: clamp(0.2em, 0.6vh, 0.6vh) 0 clamp(0.1em, 0.3vh, 0.3vh);
+    font-size: clamp(1.05em, 1.8vw, 1.3em);
+}
+.team-card p {
+    color: #7070b5;
+    font-size: clamp(0.9em, 1vw, 1em);
+    margin: 0;
+}
+
+/* RESPONSIVE ADJUSTMENTS FOR SHOWCASE */
+@media (max-width: 900px) {
+    .work-card {
+        width: clamp(180px, 30vw, 250px);
+    }
+    @keyframes continuousScroll {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+}
+
+@media (max-width: 700px) {
+    .work-list-container {
+        padding: clamp(1em, 2vh, 2em) 0;
+    }
+    .work-card {
+        width: clamp(150px, 60vw, 200px);
+        padding: clamp(1em, 2vh, 2em) clamp(0.7em, 1.2vw, 1.2vw);
+    }
+    .work-card img {
+        height: clamp(90px, 20vw, 130px);
+    }
+    .work-list-group {
+        gap: clamp(1em, 2vw, 2vw);
+    }
+    @keyframes continuousScroll {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+
+    /* Service and Team cards */
+    .services-list, .team-list {
+        flex-direction: column;
+        gap: clamp(0.8em, 2.5vw, 2.5vw);
+        align-items: center;
+    }
+    .service-card, .team-card {
+        min-width: clamp(80%, 85%, 95%);
+        max-width: 95%;
+        margin: clamp(0.8em, 1.5vw, 1.5vw) 0;
+        padding: clamp(1.2em, 2vh, 2vh) clamp(0.8em, 1.5vw, 1.5vw);
+    }
+
+    /* Fix for bottom navbar spacing on mobile */
+    #contact {
+        padding-bottom: clamp(4em, 15vw, 6em);
+    }
+}
+
+@media (max-width: 400px) {
+    .work-card {
+        width: clamp(140px, 70vw, 180px);
+    }
+    .service-card, .team-card {
+        min-width: 92%;
+        font-size: clamp(0.8em, 1vw, 0.9em);
+        padding: clamp(0.7em, 1.8vh, 1.8vh) clamp(0.5em, 0.8vw, 0.8vw);
+    }
+}
+
+/* CONTACT FORM - UNIFORM BORDER */
+.contact-form {
+    background: var(--bg);
+    padding: clamp(1.5em, 4vw, 2.5em);
+    border-radius: clamp(0.8em, 1.5vw, 2vw);
+    max-width: clamp(350px, 85vw, 600px);
+    min-width: 320px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1em, 1.5em, 1.5em);
+    box-shadow: 0 0.8vh 2.5vw rgba(30,30,30,0.10);
+    font-size: clamp(1em, 1.8vw, 1.1em);
+    border: 4px solid var(--accent);
+    transition: box-shadow 0.3s ease;
+}
+.contact-form:hover {
+    box-shadow: 0 1.2vh 3vw rgba(30,30,30,0.14);
+}
+.contact-form input, .contact-form textarea {
+    font-size: clamp(0.95em, 1.8vw, 1.1em);
+    padding: clamp(0.8em, 1.5vw, 1.2em);
+    border-radius: clamp(0.5em, 0.8vw, 1vw);
+    border: 2px solid var(--secondary);
+    outline: none;
+    resize: none;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.contact-form input:focus, .contact-form textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent);
+}
+.contact-form textarea {
+    min-height: clamp(6em, 8vh, 12vh);
+}
+.contact-form button {
+    margin-top: clamp(0.8em, 1.5em, 1.5em);
+}
+
+/* Mobile form adjustments - make form longer */
+@media (max-width: 700px) {
+    .contact-form {
+        padding: clamp(2em, 6vw, 3em); /* Increased padding */
+        gap: clamp(1.5em, 3vw, 2em); /* Increased gap between elements */
+        min-height: 65vh; /* Set minimum height to make it feel longer */
+        display: flex;
+        flex-direction: column;
+    }
+    .contact-form input {
+        padding: clamp(1em, 2.5vw, 1.5em); /* Taller input fields */
+        margin-bottom: clamp(0.5em, 1vw, 0.8em); /* Additional spacing */
+        height: clamp(3.5em, 8vw, 4em); /* Explicit height for inputs */
+    }
+    .contact-form textarea {
+        min-height: clamp(12em, 25vh, 18em); /* Much taller textarea */
+        flex-grow: 1; /* Allow textarea to expand and fill available space */
+        margin-bottom: clamp(1em, 2vw, 1.5em); /* Additional spacing */
+    }
+    .contact-form button {
+        margin-top: clamp(1.5em, 3vw, 2em); /* More space before button */
+        padding: clamp(0.8em, 3vw, 1.2em) clamp(2em, 8vw, 3em); /* Larger button */
+        font-size: clamp(1.1em, 3vw, 1.3em); /* Larger text */
+    }
+}
+
+/* FOOTER */
+.footer {
+    color: #232228;
+    padding: clamp(1em, 2em, 2em) 0 clamp(0.6em, 1em, 1em); /* Reduced padding */
+    text-align: center;
+    font-size: clamp(0.9em, 1em, 1em); /* Reduced font size */
+    margin-top: clamp(2vh, 5vh, 5vh); /* Reduced margin */
+    border-top: none;
+    box-shadow: none;
+    background: none;
+    position: relative;
+}
+.footer-separator {
+    width: clamp(200px, 70vw, 500px); /* Reduced width */
+    max-width: 98vw;
+    height: clamp(2px, 2px, 2px); /* Reduced height */
+    background: #a7a5a0;
+    opacity: 0.88;
+    margin: 0 auto clamp(0.6em, 1em, 1em) auto; /* Reduced margin */
+    border-radius: 3px;
+}
+.footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(0.2em, 0.5em, 0.5em); /* Reduced gap */
+}
+
+@media (max-width: 700px) {
+    .footer-separator { width: 90vw; }
+    .footer-content { font-size: clamp(0.8em, 0.9em, 0.9em); }
+    /* Add padding for the bottom navbar */
+    .footer {
+        padding-bottom: clamp(3.5em, 16vw, 5em);
+    }
+}
+
+/* HEADER RESPONSIVENESS */
+@media (max-width: 1200px) {
+    .header { max-width: 98vw; }
+}
+@media (max-width: 900px) {
+    .logo-img { width: clamp(18px, 2vw, 2.3em); height: clamp(18px, 2vw, 2.3em); }
+    nav .nav-list { gap: clamp(0.2em, 1vw, 1vw); }
+}
+@media (max-width: 700px) {
+    .header {
+        min-width: 0;
+        left: 0.5vw;
+        transform: none;
+        padding: 0 0.8vw;
+        border-radius: 1.5em;
+        height: clamp(28px, 6vw, 46px);
+    }
+    .logo-img { width: clamp(13px, 1.5em, 1.5em); height: clamp(13px, 1.5em, 1.5em); }
+}
+@media (max-width: 530px) {
+    .header {
+        width: 100vw;
+        padding: 0 0.5vw;
+        left: 0;
+        transform: none;
+        border-radius: 1em;
+        min-width: 0;
+        max-width: 100vw;
+        height: clamp(20px, 5vw, 38px);
+        min-height: 30px;
+        max-height: 48px;
+    }
+    .logo-img { width: clamp(10px, 1.1em, 1.1em); height: clamp(10px, 1.1em, 1.1em); min-width: 18px; min-height: 18px; }
+}
+
+/* --- MOBILE NAVBAR BOTTOM, LOGO HIDDEN, ROUNDED TOP-ONLY --- */
+@media (max-width: 600px) {
+    .header {
+        position: fixed;
+        bottom: 0;
+        top: auto;
+        left: 0;
+        right: 0;
+        width: 100vw;
+        height: 50px; /* Slightly reduced height */
+        min-height: 0;
+        max-height: none;
+        border-radius: 1.2em 1.2em 0 0;
+        padding: 0 0.8vw;
+        box-shadow: 0 -3px 18px rgba(30,30,30,0.10);
+        justify-content: center;
+        z-index: 1000;
+        background: rgba(255,255,255,0.95);
+        border: none;
+        transform: none;
+    }
+    .logo-container {
+        display: none !important;
+    }
+    nav {
+        margin-left: 0;
+        width: 100%;
+    }
+    .nav-list {
+        justify-content: center;
+        width: 100%;
+        gap: 2vw;
+    }
+    /* Add bottom margin to the content to account for fixed navbar */
+    main {
+        margin-bottom: 60px;
+    }
+    /* Improved mobile content scaling */
+    .section {
+        padding: clamp(2em, 5vh, 6vh) clamp(0.8em, 3vw, 4vw); /* Even smaller padding */
+    }
+    .section-title {
+        margin-bottom: clamp(0.6em, 2.5vw, 1.5em); /* Smaller margin */
+    }
+    /* Better spacing for mobile sections */
+    #services, #work, #team, #contact {
+        padding-top: clamp(3em, 10vw, 4em);
+        padding-bottom: clamp(3em, 10vw, 4em);
+    }
+}
+
+@media (max-width: 400px) {
+    .header {
+        height: 42px;
+    }
+    .nav-link {
+        font-size: 0.84em;
+        padding: 0.2em 0.6em;
+    }
+    .nav-link::after {
+        bottom: -0.55em;
+    }
+    .gradient-underline.active::after {
+        bottom: -0.7em;
+    }
+    /* Even smaller sizes for very small devices */
+    .section-title {
+        font-size: clamp(1em, 4.5vw, 1.8em);
+        margin-bottom: clamp(0.5em, 2vw, 1.2em);
+    }
+}
+
+/* Fix for smooth scrolling and section positioning with fixed header */
+html {
+    scroll-padding-top: 80px; /* Add padding for fixed header */
+}
+@media (max-width: 600px) {
+    html {
+        scroll-padding-bottom: 60px; /* Add padding for fixed footer navbar */
+        scroll-padding-top: 20px;
+    }
+}
