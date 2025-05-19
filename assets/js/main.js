@@ -206,39 +206,70 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Dark Theme Toggle (same as previous version)
     const themeToggle = document.getElementById('theme-toggle');
+    const themeToggleIcon = document.getElementById('theme-toggle-icon'); // Get the image element
     const body = document.body;
     const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+
+    // PATHS TO YOUR IMAGES - ASSUMING THEY ARE IN assets/images/
+    const sunIconPath = 'assets/images/sun.png';   // This is a PNG
+    const moonIconPath = 'assets/images/moon.png'; // This is a PNG
+
     function applyTheme(theme) {
         body.classList.remove('light-theme', 'dark-theme');
         body.classList.add(theme + '-theme');
-        if (themeToggle) themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+
+        // Change the image source based on the theme
+        if (themeToggleIcon) {
+            if (theme === 'dark') {
+                themeToggleIcon.src = sunIconPath;
+                themeToggleIcon.alt = "Switch to light theme"; // Update alt text
+            } else {
+                themeToggleIcon.src = moonIconPath;
+                themeToggleIcon.alt = "Switch to dark theme"; // Update alt text
+            }
+        }
     }
+
     function setTheme(theme) {
         applyTheme(theme);
         try { localStorage.setItem('theme', theme); } catch (e) { console.warn("localStorage not available for theme saving."); }
     }
+
     if (themeToggle) {
         themeToggle.addEventListener('click', () => {
             let currentTheme = body.classList.contains('dark-theme') ? 'dark' : 'light';
             setTheme(currentTheme === 'dark' ? 'light' : 'dark');
         });
     }
+
     prefersDarkScheme.addEventListener('change', (e) => {
-        try { if (!localStorage.getItem('theme')) applyTheme(e.matches ? 'dark' : 'light'); }
-        catch(e) { applyTheme(e.matches ? 'dark' : 'light'); }
+        try {
+            if (!localStorage.getItem('theme')) { // Only apply OS preference if no theme is saved
+                applyTheme(e.matches ? 'dark' : 'light');
+            }
+        } catch(e) {
+            // Fallback if localStorage is not available
+            applyTheme(e.matches ? 'dark' : 'light');
+        }
     });
+
     let initialTheme = prefersDarkScheme.matches ? 'dark' : 'light';
-    try { const savedTheme = localStorage.getItem('theme'); if (savedTheme) initialTheme = savedTheme; }
-    catch(e) { /* Use OS preference */ }
-    applyTheme(initialTheme);
+    try {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            initialTheme = savedTheme;
+        }
+    } catch(e) { /* localStorage not available, use OS preference */ }
+
+    applyTheme(initialTheme); // Apply the initial theme
 
     // Update copyright year
     const footerYear = document.querySelector('.footer-content span');
     if (footerYear) {
-        const yearStr = footerYear.textContent;
+        // Get the current year
         const currentYear = new Date().getFullYear();
-        if (yearStr.includes('2025')) {
-            footerYear.textContent = yearStr.replace('2025', currentYear);
-        }
+        // Update the text content, replacing "2025" or any existing year with the current year
+        // This regex looks for a 4-digit year and replaces it
+        footerYear.textContent = footerYear.textContent.replace(/\d{4}/, currentYear);
     }
 });

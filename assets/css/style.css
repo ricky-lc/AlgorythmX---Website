@@ -156,11 +156,24 @@ body {
     overflow: hidden;
 }
 #theme-toggle {
-    background: none; border: none; cursor: pointer; color: var(--text);
-    padding: 0.5em; font-size: clamp(1em, 1.5vw, 1.2rem);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.3em; /* Adjust padding as needed */
     margin-left: auto;
     flex-shrink: 0;
-    transition: color 0.3s;
+    display: flex; /* To center the image if needed */
+    align-items: center;
+    justify-content: center;
+    /* Remove text color if it was set, or ensure image isn't affected by it */
+    color: transparent; /* Or some other way to hide potential text overflow if any */
+}
+
+#theme-toggle-icon {
+    width: clamp(20px, 2vw, 28px); /* Adjust size as needed */
+    height: clamp(20px, 2vw, 28px); /* Adjust size as needed */
+    object-fit: contain; /* Ensures the image scales nicely */
+    display: block; /* Removes extra space below the image */
 }
 .logo-container {
     display: flex; align-items: center; gap: clamp(0.3em, 1vw, 0.7em);
