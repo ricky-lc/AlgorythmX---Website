@@ -18,7 +18,7 @@
     --input-focus-border-light: #ff6b6b;
     --input-bg-light: #fff;
     --header-bg-light: rgba(255, 255, 255, 0.48);
-    --header-bg-mobile-bottom-light: rgba(255,255,255,0.95);
+    --header-bg-mobile-bottom-light: rgb(255,255,255);
     --box-shadow-general-light: rgba(30,30,30,0.10);
     --box-shadow-services-mobile-light: rgba(30, 30, 30, 0.09);
     --mobile-bottom-nav-shadow-light: 0 -3px 18px rgba(30,30,30,0.10);
@@ -44,7 +44,7 @@
     --input-focus-border-dark: var(--accent-dark);
     --input-bg-dark: #1a1a28;
     --header-bg-dark: rgba(20, 20, 30, 0.75);
-    --header-bg-mobile-bottom-dark: rgba(15,15,25,0.97);
+    --header-bg-mobile-bottom-dark: rgb(15,15,25);
     --box-shadow-general-dark: rgba(0,0,0,0.35);
     --box-shadow-services-mobile-dark: rgba(0,0,0,0.25);
     --mobile-bottom-nav-shadow-dark: 0 -3px 12px rgba(0,0,0,0.3);
@@ -88,8 +88,7 @@ body.dark-theme {
     --accent: var(--accent-dark);
     --white: var(--white-dark);
     --header-blur: var(--header-blur-dark);
-    /* MODIFIED: Make alt background in dark theme same as main background for uniformity */
-    --alt-bg-color: var(--bg-dark); /* Was var(--alt-bg-dark) */
+    --alt-bg-color: var(--bg-dark); /* Ensures Work and Contact sections have same bg as others in dark mode */
     --card-bg: var(--card-bg-dark);
     --work-card-bg: var(--work-card-bg-dark);
     --button-cta-bg: var(--button-cta-bg-dark);
@@ -251,14 +250,6 @@ body.dark-theme .intro-logo-img { filter: drop-shadow(0 8px 16px rgba(0,0,0,0.3)
 }
 .hero h1.animation-finished { opacity: 1; } /* After hacking animation */
 
-.hero p {
-    font-family: 'Inter', Arial, sans-serif; font-size: clamp(1.1em, 2.5vw, 1.4em);
-    margin-bottom: clamp(1.2em, 3vw, 1.8em); line-height: 1.5;
-    opacity: 0; /* Start hidden for JS fade-in */
-    transition: opacity 0.8s ease-in-out; /* Removed fixed delay, JS will time it */
-}
-.hero p.fade-in-active { opacity: 0.95; }
-
 .hero h1.hacking-active { /* Style during hacking animation */
     font-family: 'Inter', Arial, sans-serif; /* Ensure Inter font */
     font-weight: 700; /* Consistent with final state */
@@ -309,7 +300,6 @@ body.dark-theme .button-cta:hover { color: #f0f0f0; } /* Lighter text on hover f
     text-align: center; position: relative;
 }
 .section.alt-bg { background-color: var(--alt-bg-color); transition: background-color 0.3s; }
-/* All .alt-bg sections (Work, Contact) will use --alt-bg-color */
 
 .section-title {
     font-size: clamp(1.1em, 5vw, 2em); font-weight: 900;
@@ -326,7 +316,7 @@ body.dark-theme .button-cta:hover { color: #f0f0f0; } /* Lighter text on hover f
 }
 body.dark-theme .gradient-title {
     background: linear-gradient(90deg, #ffae42, var(--accent), #ffffff);
-    text-shadow: 0 0 5px rgba(255,255,255,0.2);
+    /* text-shadow: 0 0 5px rgba(255,255,255,0.2); MODIFIED: Removed for better visibility */
 }
 /* Keyframes for gradient-title-shadow-pulse (same as before) */
 
@@ -471,6 +461,9 @@ body.dark-theme .service-card:hover, body.dark-theme .team-card:hover, body.dark
 
 /* --- MOBILE NAVBAR BOTTOM, LOGO HIDDEN, ROUNDED TOP-ONLY --- */
 @media (max-width: 600px) {
+    body {
+        padding-bottom: 50px; /* MODIFIED: Added to prevent footer overlap by fixed navbar */
+    }
     .header {
         position: fixed; bottom: 0; top: auto; left: 0; right: 0;
         width: 100vw;
@@ -478,12 +471,11 @@ body.dark-theme .service-card:hover, body.dark-theme .team-card:hover, body.dark
         min-height: 0;
         max-height: none;
         border-radius: 1.2em 1.2em 0 0;
-        padding: 0 2vw;
+        padding: 0 0.8vw;
         box-shadow: var(--mobile-bottom-nav-shadow-val);
         display: flex;
-        align-items: center;
-        /* MODIFIED: Center the nav element itself */
         justify-content: center;
+        align-items: center;
         z-index: 1000;
         background: var(--header-bg-mobile-bottom);
         border: none;
@@ -491,39 +483,43 @@ body.dark-theme .service-card:hover, body.dark-theme .team-card:hover, body.dark
         overflow: hidden;
     }
     .header .logo-container { display: none !important; }
+
     .header nav {
-        margin-left: 0;
-        /* MODIFIED: Remove flex-grow as .header now centers nav */
-        /* flex-grow: 1; */
         display: flex;
         justify-content: center;
+        align-items: center;
+        height: 100%;
+        width: auto;
     }
+
     .header .nav-list {
         display: flex;
         justify-content: center;
         align-items: center;
         width: auto;
-        gap: 2vw;
+        gap: clamp(1.5vw, 2vw, 2.5vw);
         flex-wrap: nowrap;
         padding: 0;
     }
+
+    .header .nav-link {
+        white-space: nowrap;
+        font-size: clamp(0.8em, 2.2vw, 0.9em);
+        padding: 0.3em 0.6em;
+    }
+
     .header #theme-toggle {
-        /* MODIFIED: Position absolutely to the right */
         position: absolute;
-        right: 2vw;
+        right: 0.8vw;
         top: 50%;
         transform: translateY(-50%);
-        /* margin-left: 1.5vw; /* REMOVE */
-        /* flex-shrink: 0; /* No longer needed for absolute positioning */
-
-        /* Keep existing styles for appearance */
         background: none; border: none; cursor: pointer; color: var(--text);
         padding: 0.3em 0.5em;
         font-size: clamp(0.9em, 2.5vw, 1.1em);
         transition: color 0.3s;
     }
 
-    main { margin-bottom: 60px; }
+    /* main { margin-bottom: 70px; } MODIFIED: Removed, body padding handles overlap */
     .section { padding: clamp(2em, 5vh, 6vh) clamp(0.8em, 3vw, 4vw); }
     .section-title { margin-bottom: clamp(0.6em, 2.5vw, 1.5em); }
     #services, #work, #team, #contact {
@@ -535,18 +531,48 @@ body.dark-theme .service-card:hover, body.dark-theme .team-card:hover, body.dark
 }
 
 @media (max-width: 400px) {
-    .header { height: 42px; padding: 0 1.5vw; }
-    /* Adjust #theme-toggle right position if needed due to smaller header padding */
-    .header #theme-toggle { right: 1.5vw; /* Align with new padding */ }
+    body {
+        padding-bottom: 42px; /* MODIFIED: Added to prevent footer overlap by fixed navbar */
+    }
+    .header {
+        height: 42px;
+    }
+    .header #theme-toggle {
+        right: 1.5vw;
+        font-size: clamp(0.8em, 2vw, 1em);
+    }
     .header .nav-link { font-size:0.8em; padding:0.2em 0.5em; }
-    /* .header #theme-toggle { font-size: clamp(0.8em, 2vw, 1em); margin-left: 1vw; } /* margin-left removed */
     .header .nav-list { gap: 1.5vw; }
+
     .nav-link::after { bottom:-0.55em; }
     .gradient-underline.active::after { bottom:-0.7em; }
     .section-title { font-size:clamp(1em,4.5vw,1.8em); margin-bottom:clamp(0.5em,2vw,1.2em); }
+    /* main { margin-bottom: 62px; } MODIFIED: Removed, body padding handles overlap */
 }
 
-/* Fix for smooth scrolling */
+/* Hero paragraph visibility (single corrected version) */
+.hero p {
+    font-family: 'Inter', Arial, sans-serif; font-size: clamp(1.1em, 2.5vw, 1.4em);
+    margin-bottom: clamp(1.2em, 3vw, 1.8em); line-height: 1.5;
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out 0.2s; /* Version with slight delay */
+}
+.hero p.fade-in-active {
+    opacity: 0.95;
+}
+
+/* Fix for smooth scrolling (Corrected scroll-padding-bottom values) */
 html { scroll-padding-top: 90px; }
 @media (min-width: 600.02px) and (max-width: 700px) { html { scroll-padding-top: 60px; } }
-@media (max-width: 600px) { html { scroll-padding-bottom: 60px; scroll-padding-top: 20px; } }
+@media (max-width: 600px) {
+    html {
+        scroll-padding-bottom: 70px; /* Navbar height (50px) + 20px offset */
+        scroll-padding-top: 20px;
+    }
+}
+@media (max-width: 400px) {
+    html {
+        scroll-padding-bottom: 62px; /* Navbar height (42px) + 20px offset */
+        /* scroll-padding-top: 20px; /* Inherited or adjust if needed */
+    }
+}
