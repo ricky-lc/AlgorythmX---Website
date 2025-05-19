@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
         introImg.style.transition = "all 0.7s cubic-bezier(.77,0,.18,1)";
         introImg.style.transform = "scale(0.25)";
         introImg.style.opacity = "0";
-        introImg.style.filter = "blur(2px)";
+        introImg.style.filter = "blur(0px)";
         setTimeout(() => {
             logoIntro.classList.add('hide');
             if (headerLogoImg) headerLogoImg.style.opacity = "1";
