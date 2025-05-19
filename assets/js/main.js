@@ -40,12 +40,64 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Form feedback
+    // Form feedback - MODIFIED TO SEND DATA TO PYTHON BACKEND
     const form = document.querySelector('.contact-form');
     if (form) {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            form.innerHTML = "<div style=\"padding:2em 0; text-align:center;\">Thank you! We'll be in touch soon.</div>";
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault(); // Prevent default browser submission
+
+            const submitButton = form.querySelector('button[type="submit"]');
+            const originalButtonText = submitButton.textContent;
+            submitButton.disabled = true;
+            submitButton.textContent = 'Sending...';
+
+            // Find or create a message display area
+            let messageDiv = form.parentNode.querySelector('.form-message-display');
+            if (!messageDiv) {
+                messageDiv = document.createElement('div');
+                messageDiv.className = 'form-message-display';
+                messageDiv.style.padding = "1em 0";
+                messageDiv.style.textAlign = "center";
+                messageDiv.style.marginTop = "1em";
+                form.parentNode.insertBefore(messageDiv, form.nextSibling);
+            }
+            messageDiv.textContent = ''; // Clear previous messages
+
+            // Get form data using the 'name' attributes from your HTML form
+            const formData = {
+                fullname: form.elements.fullname.value,
+                email: form.elements.email.value,
+                message: form.elements.message.value
+            };
+
+            try {
+                // UPDATED API endpoint URL
+                const response = await fetch('/api/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData),
+                });
+
+                const result = await response.json(); // Assuming your backend sends JSON
+
+                if (response.ok && result.success) {
+                    form.reset(); // Clear the form fields on success
+                    messageDiv.textContent = result.message || "Thank you! Your message has been sent.";
+                    messageDiv.style.color = "green"; // Or your theme's success color
+                } else {
+                    messageDiv.textContent = result.error || result.message || 'An error occurred. Please try again.';
+                    messageDiv.style.color = "red"; // Or your theme's error color
+                }
+            } catch (error) {
+                console.error('Form submission error:', error);
+                messageDiv.textContent = 'A network error occurred. Please try again.';
+                messageDiv.style.color = "red";
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = originalButtonText;
+            }
         });
     }
 
@@ -53,39 +105,39 @@ document.addEventListener('DOMContentLoaded', () => {
     function hackingTextEffect(element, finalTextLines, charCyclesPerLetter = 3, cycleSpeed = 30, lineDelay = 150) {
         return new Promise(async (resolve) => {
             const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{};':\",./<>?";
-            element.classList.add('hacking-active'); // Uses font-weight: 700 from CSS
+            element.classList.add('hacking-active');
             element.innerHTML = finalTextLines.map(line => Array(line.length).fill('&nbsp;').join('')).join('<br>');
 
             for (let lineIndex = 0; lineIndex < finalTextLines.length; lineIndex++) {
                 const finalText = finalTextLines[lineIndex];
                 let currentLineDisplay = Array(finalText.length).fill('&nbsp;');
-                let currentLineFinal = Array(finalText.length).fill(''); // Store final chars for this line
+                let currentLineFinal = Array(finalText.length).fill('');
 
                 for (let i = 0; i < finalText.length; i++) {
                     for (let cycle = 0; cycle < charCyclesPerLetter; cycle++) {
                         currentLineDisplay[i] = chars[Math.floor(Math.random() * chars.length)];
                         element.innerHTML = finalTextLines.map((txt, idx) => {
-                            if (idx < lineIndex) return finalTextLines[idx]; // Use the stored final version
+                            if (idx < lineIndex) return finalTextLines[idx];
                             if (idx === lineIndex) return currentLineDisplay.join('');
                             return Array(txt.length).fill('&nbsp;').join('');
                         }).join('<br>');
                         await new Promise(res => setTimeout(res, cycleSpeed));
                     }
                     currentLineDisplay[i] = finalText[i];
-                    currentLineFinal[i] = finalText[i]; // Store final char
+                    currentLineFinal[i] = finalText[i];
                     element.innerHTML = finalTextLines.map((txt, idx) => {
                         if (idx < lineIndex) return finalTextLines[idx];
                         if (idx === lineIndex) return currentLineDisplay.join('');
                         return Array(txt.length).fill('&nbsp;').join('');
                     }).join('<br>');
                 }
-                finalTextLines[lineIndex] = currentLineFinal.join(''); // Store the completed line
+                finalTextLines[lineIndex] = currentLineFinal.join('');
                 if (lineIndex < finalTextLines.length - 1 && lineDelay > 0) {
                     await new Promise(res => setTimeout(res, lineDelay));
                 }
             }
             element.classList.remove('hacking-active');
-            element.classList.add('animation-finished'); // H1 remains font-weight: 700 via base CSS
+            element.classList.add('animation-finished');
             resolve();
         });
     }
@@ -97,72 +149,60 @@ document.addEventListener('DOMContentLoaded', () => {
     const heroP = heroContent ? heroContent.querySelector('p') : null;
     const headerLogoImg = document.querySelector('.header .logo-img');
 
-    // Ensure the logo in header starts hidden
     if (headerLogoImg) headerLogoImg.style.opacity = "0";
 
-    // Set a max timeout to hide the intro no matter what (failsafe)
     const maxIntroTimeout = setTimeout(() => {
         if (logoIntro) logoIntro.classList.add('hide');
         if (headerLogoImg) headerLogoImg.style.opacity = "1";
         if (heroH1) heroH1.style.opacity = '1';
         if (heroP) heroP.classList.add('fade-in-active');
-    }, 5000); // 5 seconds max
+    }, 5000);
 
     if (logoIntro && heroContent && heroH1 && heroP) {
-        // Start with hero elements hidden
         heroH1.style.opacity = '0';
 
         setTimeout(() => {
-            // Logo shrinking animation
             const introImg = logoIntro.querySelector('.intro-logo-img');
             if (introImg) {
-                // Fix the transition
                 introImg.style.transition = "all 0.7s cubic-bezier(.77,0,.18,1)";
                 introImg.style.transform = "scale(0.25)";
                 introImg.style.opacity = "0";
-                introImg.style.filter = "blur(0px)"; // Re-added this line
+                introImg.style.filter = "blur(0px)";
             }
 
             setTimeout(() => {
-                // After logo shrinks, hide the intro container
                 logoIntro.classList.add('hide');
-                clearTimeout(maxIntroTimeout); // Clear failsafe since we're proceeding normally
+                clearTimeout(maxIntroTimeout);
 
-                // Show header logo and hero content
                 if (headerLogoImg) headerLogoImg.style.opacity = "1";
                 if (heroContent) heroContent.classList.add('visible');
 
-                // Start the hacking text effect
                 const h1OriginalHTML = heroH1.innerHTML;
                 const h1Texts = h1OriginalHTML.split('<br>').map(s => s.trim());
-                heroH1.style.opacity = '1'; // Make H1 visible for its animation
+                heroH1.style.opacity = '1';
 
                 hackingTextEffect(heroH1, h1Texts, 3, 30, 150)
                     .then(() => {
-                        // Fade in the paragraph after animation completes
                         heroP.classList.add('fade-in-active');
                     })
                     .catch(() => {
-                        // Fallback in case of error
                         heroH1.innerHTML = h1OriginalHTML;
                         heroH1.style.opacity = '1';
                         heroP.classList.add('fade-in-active');
                     });
 
-            }, 700); // Matches your original timing
-        }, 1200); // Matches your original timing
+            }, 700);
+        }, 1200);
     } else {
-        // Fallback if elements are missing
         if (logoIntro) logoIntro.classList.add('hide');
         if (headerLogoImg) headerLogoImg.style.opacity = "1";
         if (heroContent) heroContent.classList.add('visible');
         if (heroH1) heroH1.style.opacity = '1';
         if (heroP) heroP.classList.add('fade-in-active');
-
-        clearTimeout(maxIntroTimeout); // Clear failsafe since we're proceeding with fallback
+        clearTimeout(maxIntroTimeout);
     }
 
-    // Nav Underline (same as previous version)
+    // Nav Underline
     const navLinks = Array.from(document.querySelectorAll('.nav-link'));
     const sectionIds = navLinks.map(link => link.getAttribute('href')).filter(href => href && href.startsWith('#')).map(href => href.slice(1));
     function updateNavUnderline() {
@@ -204,28 +244,26 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', updateNavUnderline);
     navLinks.forEach(link => { link.addEventListener('click', () => setTimeout(updateNavUnderline, 550)); });
 
-    // Dark Theme Toggle (same as previous version)
+    // Dark Theme Toggle
     const themeToggle = document.getElementById('theme-toggle');
-    const themeToggleIcon = document.getElementById('theme-toggle-icon'); // Get the image element
+    const themeToggleIcon = document.getElementById('theme-toggle-icon');
     const body = document.body;
     const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
 
-    // PATHS TO YOUR IMAGES - ASSUMING THEY ARE IN assets/images/
-    const sunIconPath = 'assets/images/sun.png';   // This is a PNG
-    const moonIconPath = 'assets/images/moon.png'; // This is a PNG
+    const sunIconPath = 'assets/images/sun.png';
+    const moonIconPath = 'assets/images/moon.png';
 
     function applyTheme(theme) {
         body.classList.remove('light-theme', 'dark-theme');
         body.classList.add(theme + '-theme');
 
-        // Change the image source based on the theme
         if (themeToggleIcon) {
             if (theme === 'dark') {
                 themeToggleIcon.src = sunIconPath;
-                themeToggleIcon.alt = "Switch to light theme"; // Update alt text
+                themeToggleIcon.alt = "Switch to light theme";
             } else {
                 themeToggleIcon.src = moonIconPath;
-                themeToggleIcon.alt = "Switch to dark theme"; // Update alt text
+                themeToggleIcon.alt = "Switch to dark theme";
             }
         }
     }
@@ -244,11 +282,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     prefersDarkScheme.addEventListener('change', (e) => {
         try {
-            if (!localStorage.getItem('theme')) { // Only apply OS preference if no theme is saved
+            if (!localStorage.getItem('theme')) {
                 applyTheme(e.matches ? 'dark' : 'light');
             }
         } catch(e) {
-            // Fallback if localStorage is not available
             applyTheme(e.matches ? 'dark' : 'light');
         }
     });
@@ -261,15 +298,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     } catch(e) { /* localStorage not available, use OS preference */ }
 
-    applyTheme(initialTheme); // Apply the initial theme
+    applyTheme(initialTheme);
 
     // Update copyright year
     const footerYear = document.querySelector('.footer-content span');
     if (footerYear) {
-        // Get the current year
         const currentYear = new Date().getFullYear();
-        // Update the text content, replacing "2025" or any existing year with the current year
-        // This regex looks for a 4-digit year and replaces it
         footerYear.textContent = footerYear.textContent.replace(/\d{4}/, currentYear);
     }
 });
