@@ -11,6 +11,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { threshold: 0.15 });
     animatedEls.forEach(el => observer.observe(el));
 
+    // Fix for gradient title - adding the data attribute for pseudo element
+    const gradientTitle = document.querySelector('.gradient-title');
+    if (gradientTitle) {
+        gradientTitle.setAttribute('data-text', gradientTitle.textContent);
+    }
+
     // Smooth scroll
     document.querySelectorAll('nav a[href^="#"]').forEach(link => {
         link.addEventListener('click', function(e) {
@@ -39,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (form) {
         form.addEventListener('submit', function(e) {
             e.preventDefault();
-            form.innerHTML = '<div style="padding:2em 0; text-align:center;">Thank you! We’ll be in touch soon.</div>';
+            form.innerHTML = "<div style=\"padding:2em 0; text-align:center;\">Thank you! We'll be in touch soon.</div>";
         });
     }
 
@@ -84,49 +90,76 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Logo Intro & Hero Animation
+    // FIXED: Logo Intro Animation with better fallback
     const logoIntro = document.getElementById('logo-intro');
     const heroContent = document.getElementById('hero-content');
     const heroH1 = heroContent ? heroContent.querySelector('h1') : null;
     const heroP = heroContent ? heroContent.querySelector('p') : null;
     const headerLogoImg = document.querySelector('.header .logo-img');
 
+    // Ensure the logo in header starts hidden
     if (headerLogoImg) headerLogoImg.style.opacity = "0";
 
+    // Set a max timeout to hide the intro no matter what (failsafe)
+    const maxIntroTimeout = setTimeout(() => {
+        if (logoIntro) logoIntro.classList.add('hide');
+        if (headerLogoImg) headerLogoImg.style.opacity = "1";
+        if (heroH1) heroH1.style.opacity = '1';
+        if (heroP) heroP.classList.add('fade-in-active');
+    }, 5000); // 5 seconds max
+
     if (logoIntro && heroContent && heroH1 && heroP) {
-        heroH1.style.opacity = '0'; // Start H1 hidden
-        heroP.style.opacity = '0';  // Start P hidden
+        // Start with hero elements hidden
+        heroH1.style.opacity = '0';
 
         setTimeout(() => {
+            // Logo shrinking animation
             const introImg = logoIntro.querySelector('.intro-logo-img');
             if (introImg) {
+                // Fix the transition
                 introImg.style.transition = "all 0.7s cubic-bezier(.77,0,.18,1)";
                 introImg.style.transform = "scale(0.25)";
                 introImg.style.opacity = "0";
-                introImg.style.filter = "blur(0px)";
+                introImg.style.filter = "blur(0px)"; // Re-added this line
             }
-            setTimeout(async () => {
+
+            setTimeout(() => {
+                // After logo shrinks, hide the intro container
                 logoIntro.classList.add('hide');
+                clearTimeout(maxIntroTimeout); // Clear failsafe since we're proceeding normally
+
+                // Show header logo and hero content
                 if (headerLogoImg) headerLogoImg.style.opacity = "1";
                 if (heroContent) heroContent.classList.add('visible');
 
+                // Start the hacking text effect
                 const h1OriginalHTML = heroH1.innerHTML;
                 const h1Texts = h1OriginalHTML.split('<br>').map(s => s.trim());
                 heroH1.style.opacity = '1'; // Make H1 visible for its animation
 
-                await hackingTextEffect(heroH1, h1Texts, 3, 30, 150);
+                hackingTextEffect(heroH1, h1Texts, 3, 30, 150)
+                    .then(() => {
+                        // Fade in the paragraph after animation completes
+                        heroP.classList.add('fade-in-active');
+                    })
+                    .catch(() => {
+                        // Fallback in case of error
+                        heroH1.innerHTML = h1OriginalHTML;
+                        heroH1.style.opacity = '1';
+                        heroP.classList.add('fade-in-active');
+                    });
 
-                // Fade in P after H1 animation
-                heroP.classList.add('fade-in-active');
-
-            }, 700);
-        }, 1200);
+            }, 700); // Matches your original timing
+        }, 1200); // Matches your original timing
     } else {
+        // Fallback if elements are missing
         if (logoIntro) logoIntro.classList.add('hide');
         if (headerLogoImg) headerLogoImg.style.opacity = "1";
         if (heroContent) heroContent.classList.add('visible');
         if (heroH1) heroH1.style.opacity = '1';
-        if (heroP) heroP.style.opacity = '0.95';
+        if (heroP) heroP.classList.add('fade-in-active');
+
+        clearTimeout(maxIntroTimeout); // Clear failsafe since we're proceeding with fallback
     }
 
     // Nav Underline (same as previous version)
@@ -198,4 +231,14 @@ document.addEventListener('DOMContentLoaded', () => {
     try { const savedTheme = localStorage.getItem('theme'); if (savedTheme) initialTheme = savedTheme; }
     catch(e) { /* Use OS preference */ }
     applyTheme(initialTheme);
+
+    // Update copyright year
+    const footerYear = document.querySelector('.footer-content span');
+    if (footerYear) {
+        const yearStr = footerYear.textContent;
+        const currentYear = new Date().getFullYear();
+        if (yearStr.includes('2025')) {
+            footerYear.textContent = yearStr.replace('2025', currentYear);
+        }
+    }
 });

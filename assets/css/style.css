@@ -24,6 +24,10 @@
     --mobile-bottom-nav-shadow-light: 0 -3px 18px rgba(30,30,30,0.10);
     --team-card-p-text-light: #7070b5;
     --team-card-img-border-light: #232228;
+    --hero-gradient-1-light: #2c3e50;
+    --hero-gradient-2-light: #3498db;
+    --hero-gradient-3-light: #1abc9c;
+    --hero-gradient-4-light: #9b59b6; /* New violet color */
 
     /* Dark Theme Defaults - Revised for consistency */
     --primary-dark: #e0e0e0;
@@ -50,6 +54,10 @@
     --mobile-bottom-nav-shadow-dark: 0 -3px 12px rgba(0,0,0,0.3);
     --team-card-p-text-dark: var(--secondary-dark);
     --team-card-img-border-dark: var(--primary-dark);
+    --hero-gradient-1-dark: #1a2530;
+    --hero-gradient-2-dark: #2980b9;
+    --hero-gradient-3-dark: #16a085;
+    --hero-gradient-4-dark: #8e44ad; /* New violet color for dark mode */
 
     /* Current Theme Variables (default to light) */
     --primary: var(--primary-light);
@@ -76,6 +84,10 @@
     --mobile-bottom-nav-shadow-val: var(--mobile-bottom-nav-shadow-light);
     --team-card-p-text: var(--team-card-p-text-light);
     --team-card-img-border: var(--team-card-img-border-light);
+    --hero-gradient-1: var(--hero-gradient-1-light);
+    --hero-gradient-2: var(--hero-gradient-2-light);
+    --hero-gradient-3: var(--hero-gradient-3-light);
+    --hero-gradient-4: var(--hero-gradient-4-light);
 
     font-size: clamp(14px, 2vw, 22px);
 }
@@ -88,7 +100,7 @@ body.dark-theme {
     --accent: var(--accent-dark);
     --white: var(--white-dark);
     --header-blur: var(--header-blur-dark);
-    --alt-bg-color: var(--bg-dark); /* Ensures Work and Contact sections have same bg as others in dark mode */
+    --alt-bg-color: var(--bg-dark);
     --card-bg: var(--card-bg-dark);
     --work-card-bg: var(--work-card-bg-dark);
     --button-cta-bg: var(--button-cta-bg-dark);
@@ -105,6 +117,10 @@ body.dark-theme {
     --mobile-bottom-nav-shadow-val: var(--mobile-bottom-nav-shadow-dark);
     --team-card-p-text: var(--team-card-p-text-dark);
     --team-card-img-border: var(--team-card-img-border-dark);
+    --hero-gradient-1: var(--hero-gradient-1-dark);
+    --hero-gradient-2: var(--hero-gradient-2-dark);
+    --hero-gradient-3: var(--hero-gradient-3-dark);
+    --hero-gradient-4: var(--hero-gradient-4-dark);
 }
 
 
@@ -223,13 +239,50 @@ body.dark-theme .intro-logo-img { filter: drop-shadow(0 8px 16px rgba(0,0,0,0.3)
     100% { transform: scale(1) rotate(0deg); opacity: 1; }
 }
 
-/* HERO SECTION */
+/* HERO SECTION - SMOOTHER GRADIENT ANIMATION */
 .hero {
     min-height: 100vh;
-    background: linear-gradient(135deg, #2c3e50 0%, #3498db 50%, #1abc9c 100%);
+    /* Define a sequence of colors for the gradient. G1 is repeated at the end
+       to ensure a seamless loop when 'alternate' is used. */
+    background: linear-gradient(135deg,
+    var(--hero-gradient-1),
+    var(--hero-gradient-2),
+    var(--hero-gradient-3),
+    var(--hero-gradient-4),
+    var(--hero-gradient-1) /* G1 repeated for smooth loop with alternate */
+    );
+    /* Make the background much larger than the viewport.
+       This gives colors more space to blend and allows for wider movement. */
+    background-size: 300% 300%;
+    /* Slower animation, ease-in-out for smooth start/end, infinite loop,
+       and alternate direction for a back-and-forth motion. */
+    animation: gradualGradientBG 35s ease-in-out infinite alternate;
     color: var(--white); display: flex; align-items: center; justify-content: center;
     position: relative; overflow: hidden; padding-top: clamp(60px, 10vw, 90px);
+    /* transition: background 0.5s ease-out; /* Optional: for theme switch, if needed */
 }
+
+@keyframes gradualGradientBG {
+    0% {
+        background-position: 0% 50%; /* Start: Left-Center */
+    }
+    25% {
+        background-position: 100% 0%; /* Move: Top-Right */
+    }
+    50% {
+        background-position: 50% 100%; /* Move: Bottom-Center */
+    }
+    75% {
+        background-position: 0% 100%; /* Move: Bottom-Left */
+    }
+    100% {
+        background-position: 0% 50%; /* Return to Start: Left-Center */
+    }
+}
+
+/* Il resto del tuo CSS per .hero-bg, .hero .content, etc. segue qui... */
+/* ... ad esempio ... */
+
 .hero-bg {
     position: absolute; width: 100vw; height: 100vh; top: 0; left: 0;
     background: url('https://www.transparenttextures.com/patterns/memphis-mini.png'), radial-gradient(circle at 70% 30%, var(--white) 0%, transparent 70%);
@@ -307,18 +360,43 @@ body.dark-theme .button-cta:hover { color: #f0f0f0; } /* Lighter text on hover f
     color: var(--primary); max-width: 700px; margin-left: auto; margin-right: auto;
     transition: color 0.3s;
 }
+
+/* FIX FOR GRADIENT TITLE "CONTACT US" */
 .gradient-title { /* Used for "Contact Us" */
     background: linear-gradient(90deg, #4c2802, #ff6b6b, #70e1f5);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text; color: transparent; text-fill-color: transparent;
-    animation: gradient-title-shadow-pulse 2.5s infinite alternate cubic-bezier(.77,0,.18,1);
+    background-clip: text; color: transparent;
+    position: relative; /* Added for pseudo-element support */
+    display: inline-block; /* For better text control */
     transition: background 0.3s;
+    z-index: 1; /* Ensure text stays above the pseudo-element */
 }
+
+/* Add a subtle glow behind the text to improve visibility */
+.gradient-title::before {
+    content: attr(data-text); /* Uses the text content from data-text attribute */
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: -1;
+    color: rgba(255, 255, 255, 0.1); /* Very subtle white */
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+    filter: blur(4px);
+}
+
 body.dark-theme .gradient-title {
-    background: linear-gradient(90deg, #ffae42, var(--accent), #ffffff);
-    /* text-shadow: 0 0 5px rgba(255,255,255,0.2); MODIFIED: Removed for better visibility */
+    background: linear-gradient(90deg, #ffae42, #00e5ff, #ffffff); /* Brighter gradient for dark mode */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
 }
-/* Keyframes for gradient-title-shadow-pulse (same as before) */
+
+body.dark-theme .gradient-title::before {
+    color: rgba(255, 255, 255, 0.15); /* Slightly stronger for dark mode */
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+    filter: blur(5px);
+}
 
 /* CARDS (General) */
 .service-card, .team-card, .work-card {
@@ -462,10 +540,10 @@ body.dark-theme .service-card:hover, body.dark-theme .team-card:hover, body.dark
 /* --- MOBILE NAVBAR BOTTOM, LOGO HIDDEN, ROUNDED TOP-ONLY --- */
 @media (max-width: 600px) {
     body {
-        padding-bottom: 50px; /* MODIFIED: Added to prevent footer overlap by fixed navbar */
+        padding-bottom: 50px;
     }
     .header {
-        position: fixed; bottom: 0; top: auto; left: 0; right: 0;
+        position: fixed; bottom: 0; top: auto; left: 1.12%; right: 0;
         width: 100vw;
         height: 50px;
         min-height: 0;
@@ -474,7 +552,6 @@ body.dark-theme .service-card:hover, body.dark-theme .team-card:hover, body.dark
         padding: 0 0.8vw;
         box-shadow: var(--mobile-bottom-nav-shadow-val);
         display: flex;
-        justify-content: center;
         align-items: center;
         z-index: 1000;
         background: var(--header-bg-mobile-bottom);
@@ -490,6 +567,7 @@ body.dark-theme .service-card:hover, body.dark-theme .team-card:hover, body.dark
         align-items: center;
         height: 100%;
         width: auto;
+        margin: 0 auto 0 10%; /* MODIFIED: Shifted right by 10% */
     }
 
     .header .nav-list {
@@ -519,7 +597,6 @@ body.dark-theme .service-card:hover, body.dark-theme .team-card:hover, body.dark
         transition: color 0.3s;
     }
 
-    /* main { margin-bottom: 70px; } MODIFIED: Removed, body padding handles overlap */
     .section { padding: clamp(2em, 5vh, 6vh) clamp(0.8em, 3vw, 4vw); }
     .section-title { margin-bottom: clamp(0.6em, 2.5vw, 1.5em); }
     #services, #work, #team, #contact {
@@ -532,7 +609,7 @@ body.dark-theme .service-card:hover, body.dark-theme .team-card:hover, body.dark
 
 @media (max-width: 400px) {
     body {
-        padding-bottom: 42px; /* MODIFIED: Added to prevent footer overlap by fixed navbar */
+        padding-bottom: 42px;
     }
     .header {
         height: 42px;
@@ -547,7 +624,6 @@ body.dark-theme .service-card:hover, body.dark-theme .team-card:hover, body.dark
     .nav-link::after { bottom:-0.55em; }
     .gradient-underline.active::after { bottom:-0.7em; }
     .section-title { font-size:clamp(1em,4.5vw,1.8em); margin-bottom:clamp(0.5em,2vw,1.2em); }
-    /* main { margin-bottom: 62px; } MODIFIED: Removed, body padding handles overlap */
 }
 
 /* Hero paragraph visibility (single corrected version) */
@@ -566,13 +642,12 @@ html { scroll-padding-top: 90px; }
 @media (min-width: 600.02px) and (max-width: 700px) { html { scroll-padding-top: 60px; } }
 @media (max-width: 600px) {
     html {
-        scroll-padding-bottom: 70px; /* Navbar height (50px) + 20px offset */
+        scroll-padding-bottom: 70px;
         scroll-padding-top: 20px;
     }
 }
 @media (max-width: 400px) {
     html {
-        scroll-padding-bottom: 62px; /* Navbar height (42px) + 20px offset */
-        /* scroll-padding-top: 20px; /* Inherited or adjust if needed */
+        scroll-padding-bottom: 62px;
     }
 }
