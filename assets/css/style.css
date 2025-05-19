@@ -7,7 +7,7 @@
     --accent-light: #ff6b6b;
     --white-light: #fff;
     --header-blur-light: 16px;
-    --alt-bg-light: #f8fafc;
+    --alt-bg-light: #f8fafc; /* NOTE: Same as --bg-light */
     --card-bg-light: #fff;
     --work-card-bg-light: #fff;
     --button-cta-bg-light: #fff;
@@ -88,7 +88,8 @@ body.dark-theme {
     --accent: var(--accent-dark);
     --white: var(--white-dark);
     --header-blur: var(--header-blur-dark);
-    --alt-bg-color: var(--alt-bg-dark); /* All .alt-bg sections use this */
+    /* MODIFIED: Make alt background in dark theme same as main background for uniformity */
+    --alt-bg-color: var(--bg-dark); /* Was var(--alt-bg-dark) */
     --card-bg: var(--card-bg-dark);
     --work-card-bg: var(--work-card-bg-dark);
     --button-cta-bg: var(--button-cta-bg-dark);
@@ -477,11 +478,12 @@ body.dark-theme .service-card:hover, body.dark-theme .team-card:hover, body.dark
         min-height: 0;
         max-height: none;
         border-radius: 1.2em 1.2em 0 0;
-        padding: 0 2vw; /* Adjusted padding for side space */
+        padding: 0 2vw;
         box-shadow: var(--mobile-bottom-nav-shadow-val);
         display: flex;
         align-items: center;
-        /* justify-content: center; /* Removed to allow nav to grow and toggle to space */
+        /* MODIFIED: Center the nav element itself */
+        justify-content: center;
         z-index: 1000;
         background: var(--header-bg-mobile-bottom);
         border: none;
@@ -491,29 +493,34 @@ body.dark-theme .service-card:hover, body.dark-theme .team-card:hover, body.dark
     .header .logo-container { display: none !important; }
     .header nav {
         margin-left: 0;
-        flex-grow: 1; /* Allow nav to take up available space */
+        /* MODIFIED: Remove flex-grow as .header now centers nav */
+        /* flex-grow: 1; */
         display: flex;
-        justify-content: center; /* Center the .nav-list within nav */
+        justify-content: center;
     }
     .header .nav-list {
-        display: flex; /* Already flex, ensure it */
-        justify-content: center; /* Center li items */
+        display: flex;
+        justify-content: center;
         align-items: center;
-        width: auto; /* Shrink to content */
+        width: auto;
         gap: 2vw;
         flex-wrap: nowrap;
         padding: 0;
     }
-    .header .nav-link {
-        white-space: nowrap;
-        font-size: clamp(0.8em, 2.2vw, 0.9em);
-        padding: 0.3em 0.6em;
-    }
     .header #theme-toggle {
+        /* MODIFIED: Position absolutely to the right */
+        position: absolute;
+        right: 2vw;
+        top: 50%;
+        transform: translateY(-50%);
+        /* margin-left: 1.5vw; /* REMOVE */
+        /* flex-shrink: 0; /* No longer needed for absolute positioning */
+
+        /* Keep existing styles for appearance */
+        background: none; border: none; cursor: pointer; color: var(--text);
         padding: 0.3em 0.5em;
         font-size: clamp(0.9em, 2.5vw, 1.1em);
-        margin-left: 1.5vw; /* Space from nav items */
-        flex-shrink: 0;
+        transition: color 0.3s;
     }
 
     main { margin-bottom: 60px; }
@@ -529,8 +536,10 @@ body.dark-theme .service-card:hover, body.dark-theme .team-card:hover, body.dark
 
 @media (max-width: 400px) {
     .header { height: 42px; padding: 0 1.5vw; }
+    /* Adjust #theme-toggle right position if needed due to smaller header padding */
+    .header #theme-toggle { right: 1.5vw; /* Align with new padding */ }
     .header .nav-link { font-size:0.8em; padding:0.2em 0.5em; }
-    .header #theme-toggle { font-size: clamp(0.8em, 2vw, 1em); margin-left: 1vw; }
+    /* .header #theme-toggle { font-size: clamp(0.8em, 2vw, 1em); margin-left: 1vw; } /* margin-left removed */
     .header .nav-list { gap: 1.5vw; }
     .nav-link::after { bottom:-0.55em; }
     .gradient-underline.active::after { bottom:-0.7em; }
