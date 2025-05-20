@@ -466,7 +466,7 @@ body.dark-theme .service-card:hover, body.dark-theme .team-card:hover, body.dark
 .team-card img {
     width: clamp(55px,10vw,100px); height: clamp(55px,10vw,100px);
     border-radius: 50%; margin-bottom: clamp(0.8em,1.5vh,1.5vh);
-    object-fit: cover; border: 3px solid var(--team-card-img-border);
+    object-fit: cover; border: 3px transparent var(--team-card-img-border);
     transition: border-color 0.3s;
 }
 .team-card h4 { margin:clamp(0.2em,0.6vh,0.6vh) 0 clamp(0.1em,0.3vh,0.3vh); font-size:clamp(1.05em,1.8vw,1.3em); }
