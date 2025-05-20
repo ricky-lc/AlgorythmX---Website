@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Download APK - AlgorythmX</title>
+  <style>
+    /* Stili di base (Tema Chiaro) */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+      margin: 0;
+      padding: 20px;
+      background-color: #f4f7f9;
+      color: #333;
+      transition: background-color 0.3s, color 0.3s;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: calc(100vh - 40px);
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 25px 30px;
+      background-color: #ffffff;
+      color: #333;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); /* BOX SHADOW per il container (Tema Chiaro) - Enhanced */
+      text-align: center;
+      transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
+    }
+
+    h1 {
+      color: #007bff; /* Fallback color */
+      background: linear-gradient(135deg, #007bff, #0056b3);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 20px;
+    }
+
+    p {
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+
+    .download-link {
+      display: inline-block;
+      padding: 12px 25px;
+      margin: 10px 5px;
+      /* GRADIENTE per i bottoni (Tema Chiaro) */
+      background: linear-gradient(145deg, #0d8bff, #0072ff);
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0, 100, 200, 0.3); /* BOX SHADOW per i bottoni (Tema Chiaro) - Enhanced */
+      transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+    }
+
+    .download-link:hover {
+      /* GRADIENTE HOVER per i bottoni (Tema Chiaro) */
+      background: linear-gradient(145deg, #0072ff, #005bcc);
+      transform: translateY(-2px);
+      box-shadow: 0 7px 18px rgba(0, 90, 180, 0.4); /* BOX SHADOW HOVER bottoni (Tema Chiaro) - Enhanced */
+    }
+
+    .footer-text {
+      margin-top: 25px;
+      font-size: 0.9em;
+      color: #777;
+    }
+
+    /* Tema Scuro */
+    body.dark-theme {
+      background-color: #121212; /* Sfondo più scuro per un look moderno */
+      color: #e0e0e0;
+    }
+
+    body.dark-theme .container {
+      background-color: #1e1e1e; /* Sfondo container leggermente più chiaro del body */
+      color: #e0e0e0;
+      border-color: #333; /* Bordo più scuro */
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55); /* BOX SHADOW per il container (Tema Scuro) - Enhanced */
+    }
+
+    body.dark-theme h1 {
+      color: #58a6ff; /* Fallback color */
+      background: linear-gradient(135deg, #58a6ff, #1f6feb);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    body.dark-theme .download-link {
+      /* GRADIENTE per i bottoni (Tema Scuro) */
+      background: linear-gradient(145deg, #2a8cff, #1f6feb);
+      box-shadow: 0 5px 15px rgba(20, 100, 220, 0.35); /* BOX SHADOW per i bottoni (Tema Scuro) - Enhanced */
+      color: white; /* Assicurarsi che il testo rimanga bianco e leggibile */
+    }
+
+    body.dark-theme .download-link:hover {
+      /* GRADIENTE HOVER per i bottoni (Tema Scuro) */
+      background: linear-gradient(145deg, #1f6feb, #1759c4);
+      box-shadow: 0 7px 18px rgba(15, 80, 190, 0.45); /* BOX SHADOW HOVER bottoni (Tema Scuro) - Enhanced */
+    }
+
+    body.dark-theme .footer-text {
+      color: #aaa;
+    }
+
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Scarica le App di AlgorythmX</h1>
+  <p>Clicca sui link qui sotto per scaricare i file APK direttamente sul tuo dispositivo.</p>
+
+  <a href="/apks/nome_app1.apk" class="download-link" download>Scarica App 1 (nome_app1.apk)</a>
+  <a href="/apks/nome_app2.apk" class="download-link" download>Scarica App 2 (nome_app2.apk)</a>
+
+  <p class="footer-text">
+    Assicurati di aver abilitato l'installazione da "Origini Sconosciute" o "Installa app sconosciute"
+    nelle impostazioni di sicurezza del tuo dispositivo Android prima di procedere con l'installazione.
+  </p>
+</div>
+
+<script>
+  (function() {
+    const currentTheme = localStorage.getItem('theme');
+    if (currentTheme === 'dark') {
+      document.body.classList.add('dark-theme');
+    } else {
+      document.body.classList.remove('dark-theme');
+    }
+  })();
+</script>
+</body>
+</html>
